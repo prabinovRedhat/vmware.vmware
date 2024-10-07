@@ -1,0 +1,7 @@
+collections:
+  - name: community.general
+  - name: ansible.posix
+  - name: community.vmware
+  - name: https://github.com/prabinovRedhat/vmware.vmware.git
+    type: git
+    version: check_dpm_module
