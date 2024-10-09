@@ -31,6 +31,66 @@
         validate_certs: false
         port: "{{ vcenter_port }}"
         cluster_name: "{{ test_cluster }}"
+
+    - name: Set DRS Settings In Test Cluster
+      vmware.vmware.cluster_drs:
+        validate_certs: false
+        hostname: "{{ vcenter_hostname }}"
+        username: "{{ vcenter_username }}"
+        password: "{{ vcenter_password }}"
+        datacenter: "{{ vcenter_datacenter }}"
+        cluster: "{{ test_cluster }}"
+        port: "{{ vcenter_port }}"
+
+    # - name: Set DPM Settings In Test Cluster - Enable
+    #   vmware.vmware.cluster_dpm:
+    #     validate_certs: false
+    #     hostname: "{{ vcenter_hostname }}"
+    #     username: "{{ vcenter_username }}"
+    #     password: "{{ vcenter_password }}"
+    #     datacenter: "{{ vcenter_datacenter }}"
+    #     cluster: "{{ test_cluster }}"
+    #     port: "{{ vcenter_port }}"
+    #     enable: "{{ dpm_enable }}"
+    #     automation_level: "{{ dpm_automation_level }}"
+    #     recommendation_priority_threshold: "{{ dpm_recommendation_priority_threshold_1 }}"
+    #   register: _out
+    # testing for idempotence because recommendation_preiority_threshold is a little counter intuitive
+
+    # - name: Print a message OUT1
+    #   ansible.builtin.debug:
+    #     msg: "{{ _out }}"
+
+    # - name: Pause for 1 minutes
+    #   pause:
+    #     minutes: 1
+
+    # - name: Set DPM Settings In Test Cluster Again - Disable
+    #   vmware.vmware.cluster_dpm:
+    #     validate_certs: false
+    #     hostname: "{{ vcenter_hostname }}"
+    #     username: "{{ vcenter_username }}"
+    #     password: "{{ vcenter_password }}"
+    #     datacenter: "{{ vcenter_datacenter }}"
+    #     cluster: "{{ test_cluster }}"
+    #     port: "{{ vcenter_port }}"
+    #     enable: "{{ dpm_disable }}"
+    #     # automation_level: "{{ dpm_automation_level }}"
+    #     # recommendation_priority_threshold: "{{ dpm_recommendation_priority_threshold }}"
+    #   register: _out
+
+    # - name: Print a message OUT2
+    #   ansible.builtin.debug:
+    #     msg: "{{ _out }}"
+
+    # - name: Check Task Result
+    #   ansible.builtin.assert:
+    #     that: _out is changed
+
+    # - name: Pause for 1 minutes
+    #   pause:
+    #     minutes: 1
+
     - name: Set DPM Settings In Test Cluster
       vmware.vmware.cluster_dpm:
         validate_certs: false
@@ -40,12 +100,20 @@
         datacenter: "{{ vcenter_datacenter }}"
         cluster: "{{ test_cluster }}"
         port: "{{ vcenter_port }}"
-        enable: "{{ dpm_enable }}"
+        enable: "{{ dpm_no }}"
         automation_level: "{{ dpm_automation_level }}"
         recommendation_priority_threshold: "{{ dpm_recommendation_priority_threshold }}"
       register: _out
-    # testing for idempotence because recommendation_preiority_threshold is a little counter intuitive
-    - name: Set DPM Settings In Test Cluster Again - Idempotence
+
+    - name: Pause for 1 minutes
+      pause:
+        minutes: 1
+
+    - name: Print a message OUT, TRESH 3
+      ansible.builtin.debug:
+        msg: "{{ _out }}"
+
+    - name: Set DPM Settings In Test Cluster 
       vmware.vmware.cluster_dpm:
         validate_certs: false
         hostname: "{{ vcenter_hostname }}"
@@ -54,13 +122,19 @@
         datacenter: "{{ vcenter_datacenter }}"
         cluster: "{{ test_cluster }}"
         port: "{{ vcenter_port }}"
-        enable: "{{ dpm_enable }}"
+        enable: "{{ dpm_disable }}"
         automation_level: "{{ dpm_automation_level }}"
         recommendation_priority_threshold: "{{ dpm_recommendation_priority_threshold }}"
       register: _out
+
+    - name: Print a message OUT TRESH 2
+      ansible.builtin.debug:
+        msg: "{{ _out }}"
+
     - name: Check Task Result
       ansible.builtin.assert:
         that: _out is not changed
+
     - name: Gather Cluster Settings
       community.vmware.vmware_cluster_info:
         validate_certs: false

@@ -2,6 +2,6 @@ collections:
   - name: community.general
   - name: ansible.posix
   - name: community.vmware
-  - name: https://github.com/prabinovRedhat/vmware.vmware.git
+  - name: https://github.com/mikemorency/vmware.vmware.git
     type: git
-    version: check_dpm_module
+    version: feature/make-dpm-options-match-ui
