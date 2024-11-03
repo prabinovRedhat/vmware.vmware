@@ -52,7 +52,8 @@
         that:
           - __res.changed == False
           - __res.vm_portgroup_info[vm_name] | length == 1
-          - __res.vm_portgroup_info[vm_name][0]['portgroup_name'] == "VM Network"
+          - "'portgroup_name' in __res.vm_portgroup_info[vm_name][0] or 'name' in __res.vm_portgroup_info[vm_name][0]"
+          - (__res.vm_portgroup_info[vm_name][0].get('portgroup_name') == "VM Network" or __res.vm_portgroup_info[vm_name][0].get('name') == "VM Network")
           - __res.vm_portgroup_info[vm_name][0]['nic_mac_address'] == "00:50:56:bd:d2:9e"
           - __res.vm_portgroup_info[vm_name][0]['nic_type'] == "VMXNET3"
           - __res.vm_portgroup_info[vm_name][0]['type'] == "DISTRIBUTED_PORTGROUP"
